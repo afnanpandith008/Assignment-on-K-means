@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn import datasets
+from sklearn.preprocessing import StandardScaler
+
+# Load the Iris dataset
+iris = datasets.load_iris()
+X = iris.data  # Features
+y = iris.target  # Actual labels (just for reference, not used in K-means)
+
+# Normalize the features for better clustering performance
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Define the number of clusters (k)
+k = 3  # Since the Iris dataset has 3 types of flowers
+
+# Apply KMeans clustering
+kmeans = KMeans(n_clusters=k, random_state=42)
+kmeans.fit(X_scaled)
+
+# Get the cluster centers (centroids) and labels (assigned clusters)
+centroids = kmeans.cluster_centers_
+labels = kmeans.labels_
+
+# Visualize the clusters (we will use the first two features for 2D plotting)
+plt.figure(figsize=(8, 6))
+for i in range(k):
+    points = X_scaled[labels == i]
+    plt.scatter(points[:, 0], points[:, 1], label=f'Cluster {i + 1}')
+
+# Plot centroids
+plt.scatter(centroids[:, 0], centroids[:, 1], s=300, c='red', marker='X', label='Centroids')
+
+plt.title('K-means Clustering on Iris Dataset')
+plt.xlabel('Feature 1 (sepal length)')
+plt.ylabel('Feature 2 (sepal width)')
+plt.legend()
+plt.grid(True)
+plt.show()
